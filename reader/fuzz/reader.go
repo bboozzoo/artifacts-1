@@ -23,14 +23,41 @@ func Fuzz(data []byte) int {
 		if up == nil {
 			panic("update type nil")
 		}
+
+		if up.Type == "" {
+			panic("update type empty")
+		}
 		fls := w.GetUpdateFiles()
 		if len(fls) == 0 {
 			panic("no update files")
 		}
 
+		for _, f := range fls {
+			if f.Checksum == nil || len(f.Checksum) == 0 {
+				panic("no checksum")
+			}
+
+			if f.Path == "" {
+				panic("empty path?")
+			}
+
+			if f.Size == 0 {
+				panic("zero size")
+			}
+		}
+
 		m := w.GetMetadata()
-		if m == nil {
-			panic("metadata nil")
+		if m == nil || len(*m) == 0 {
+			panic("metadata nil or empty")
+		}
+
+		for k, v := range *m {
+			if k == "" {
+				panic("metadata key empty")
+			}
+			if v == nil {
+				panic("metadata value nil")
+			}
 		}
 	}
 
