@@ -61,5 +61,10 @@ func Fuzz(data []byte) int {
 		}
 	}
 
+	// try reading again
+	workers, err = ar.Read()
+	if err != nil {
+		panic("tried to read again and got no error")
+	}
 	return 1
 }
